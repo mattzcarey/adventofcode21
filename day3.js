@@ -997,76 +997,76 @@ report = `111011001010
 010000111101
 100011100001
 101100011010
-100110100000`.split('\n')
+100110100000`.split("\n");
 
-console.log(typeof(report))
+//console.log(typeof report);  //object
 
 //Part1
 //console.log(report)
 
-function calculateGammaEpsilon(arr){
+function calculateGammaEpsilon(arr, kind) {
+  let hits = [];
 
-    let hits = new Map()
-
-    function recordHits(pos, res) {
-        if (!hits.has(pos)) {
-            hits.set(pos, { zeros: 0, ones: 0 })
-        }
-        let hit = hits.get(pos)
-        if (res === '0') {
-            hit.zeros++
-        } else if (res === '1') {
-            hit.ones++
-        } else throw Error('made mistake...')
+  function recordHits(pos, res) {
+    if (!hits[pos]) {
+      hits[pos] = { zeros: 0, ones: 0 };
     }
+    let hit = hits[pos];
+    if (res === "0") {
+      hit.zeros++;
+    } else if (res === "1") {
+      hit.ones++;
+    } else throw Error("made mistake...");
+  }
 
-    for (let ar of arr) {
-        for (let i=0; i<ar.length; i++) {
-            recordHits(i, rep[i])
-        }
+  for (let ar of arr) {
+    for (let i = 0; i < ar.length; i++) {
+      recordHits(i, ar[i]);
     }
+  }
 
-    let gamma = ''
-    let epsilon = ''
+  let gamma = "";
+  let epsilon = "";
 
-    for (let hit of hits.values()) { 
-        if (hit.ones > hit.zeros) {
-            gamma += '1'
-            epsilon += '0'
-        } else if  (hit.zeros > hit.ones) {
-            gamma += '0'
-            epsilon += '1'
-        } else throw Error('equal number of ones and zeros')
+  for (let hit of hits.values()) {
+    if (hit.ones > hit.zeros) {
+      gamma += "1";
+      epsilon += "0";
+    } else if (hit.zeros > hit.ones) {
+      gamma += "0";
+      epsilon += "1";
+    } else if (hit.zeros === hit.ones) {
+        gamma += '1';
+        epsilon += '0';
+
     }
+  }
 
-    return [gamma, epsilon]
+  return [gamma, epsilon];
 }
 
-alert(
-    parseInt(gamma, 2) *
-    parseInt(epsilon, 2)
-)
+values = calculateGammaEpsilon(report);
+//console.log(values);
+//alert(parseInt(values[0], 2) * parseInt(values[1], 2));
 
-//Part2 (not functioning)
+//Part2 specific
 
 function determineRating(arr, kind, pos = 0) {
-    let [gamma, epsilon] = calculateGammaEpsilon(arr)
-    let targetValue = kind === 'o' ?
-      gamma[pos] :
-      epsilon[pos];
-    let filtered = arr.filter(report => 
-        report[pos] === targetValue 
-        )
-    if (filtered.length === 1) {
-        return filtered[0]
-    } else if (filter.length === 0) {
-        throw Error('nothing in filtered list')
-    } else {
-        return determineRating(filtered, kind, pos + 1)
-    }
+  let [gamma, epsilon] = calculateGammaEpsilon(arr, kind);
+  let targetValue = kind === "o" ? gamma[pos] : epsilon[pos];
+  let filtered = arr.filter((report) => report[pos] === targetValue);
+  if (filtered.length === 1) {
+    return filtered[0];
+  } else if (filtered.length === 0) {
+    throw Error("nothing in filtered list");
+  } else {
+    return determineRating(filtered, kind, pos + 1);
+  }
 }
 
-let oxygenRating = determineRating(report, 'o')
-let co2Rating = determineRating(report, 'c')
+let oxygenRating = determineRating(report, "o");
+let co2Rating = determineRating(report, "c");
 
-console.log(`O2 = ${oxygenRating}, CO2 = ${co2Rating}`)
+lifeSupport =  parseInt(oxygenRating,2) * parseInt(co2Rating,2)
+
+console.log(lifeSupport);
