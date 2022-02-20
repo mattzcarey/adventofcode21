@@ -1041,7 +1041,6 @@ function calculateGammaEpsilon(arr, kind) {
 
     }
   }
-
   return [gamma, epsilon];
 }
 

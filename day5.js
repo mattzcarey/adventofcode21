@@ -510,7 +510,7 @@ const smallInput = `0,9 -> 5,9
 0,0 -> 8,8
 5,5 -> 8,2`.split("\n");
 
-lines = input
+lines = smallInput
   .map((line) => line.split("->"))
   .map(([from, to]) => [from.split(",").map(Number), to.split(",").map(Number)])
   .map(([from, to]) => ({
@@ -518,9 +518,9 @@ lines = input
     to: { x: to[0], y: to[1] },
     vert: false,
     horiz: false,
-  }))
-  //p1 only
-  //.filter((line) => line.from.x === line.to.x || line.from.y === line.to.y);
+  }));
+//p1 only
+//.filter((line) => line.from.x === line.to.x || line.from.y === line.to.y);
 
 let cors = new Map();
 
@@ -573,6 +573,7 @@ function genCoordinates(line) {
       }
     }
   }
+  return cors
 }
 
 for (let line of lines) {
@@ -582,6 +583,7 @@ for (let line of lines) {
     line.horiz = true;
   }
   genCoordinates(line);
+  printTest(cors)
 }
 
 // console.log(lines);
@@ -593,19 +595,21 @@ for (let value of cors.values()) {
   toAdd = value < 2 ? 0 : 1;
   totalCrosses += toAdd;
 }
-alert(totalCrosses);
+console.log(totalCrosses);
 
 ///print test///
-let outputString = "";
-for (let i = 0; i < 300; i++) {
-  let outputStringLine = "";
-  for (let j = 0; j < 100; j++) {
-    if (cors.has(`x: ${j}, y: ${i}`)) {
-      outputStringLine += cors.get(`x: ${j}, y: ${i}`);
-    } else {
-      outputStringLine += ".";
+function printTest(cors) {
+  let outputString = "";
+  for (let i = 0; i < 10; i++) {
+    let outputStringLine = "";
+    for (let j = 0; j < 10; j++) {
+      if (cors.has(`x: ${j}, y: ${i}`)) {
+        outputStringLine += cors.get(`x: ${j}, y: ${i}`);
+      } else {
+        outputStringLine += ".";
+      }
     }
+    outputString += "\n" + outputStringLine;
   }
-  outputString += "\n" + outputStringLine;
+  console.log(outputString);
 }
-console.log(outputString);
